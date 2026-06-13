@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>私人笔记</title>
+<link rel="stylesheet" href="style.css" />
+<!-- Supabase JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- 登录 / 注册 视图 -->
+<!-- ============================================================ -->
+<div id="auth-view" class="auth-container">
+  <div class="auth-card">
+    <h1 class="logo">📝 私人笔记</h1>
+    <div id="auth-error" class="error-msg hidden"></div>
+
+    <form id="auth-form">
+      <label for="email">邮箱</label>
+      <input type="email" id="email" required placeholder="you@example.com" />
+
+      <label for="password">密码</label>
+      <input type="password" id="password" required placeholder="至少 6 位" minlength="6" />
+
+      <button type="submit" id="auth-submit-btn" class="btn-primary">登录</button>
+    </form>
+
+    <p class="auth-switch">
+      还没有账号？<a href="#" id="toggle-auth-mode">立即注册</a>
+    </p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 主应用视图 -->
+<!-- ============================================================ -->
+<div id="app-view" class="app-container hidden">
+
+  <!-- 侧边栏 -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>📝 我的笔记</h2>
+      <button id="logout-btn" class="btn-icon" title="退出登录">⏏</button>
+    </div>
+
+    <!-- 搜索框 -->
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="搜索笔记标题或内容..." />
+    </div>
+
+    <!-- 新建笔记 -->
+    <button id="new-note-btn" class="btn-primary btn-block">＋ 新建笔记</button>
+
+    <!-- 筛选：全部 / 收藏 -->
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all">全部</button>
+      <button class="filter-tab" data-filter="favorite">⭐ 收藏</button>
+    </div>
+
+    <!-- 分类管理 -->
+    <div class="category-section">
+      <div class="category-header">
+        <span>分类</span>
+        <button id="add-category-btn" class="btn-icon-small" title="新建分类">＋</button>
+      </div>
+      <ul id="category-list" class="category-list">
+        <li class="category-item active" data-id="">全部分类</li>
+        <!-- 动态生成 -->
+      </ul>
+    </div>
+
+    <!-- 笔记列表 -->
+    <ul id="notes-list" class="notes-list">
+      <!-- 动态生成 -->
+    </ul>
+  </aside>
+
+  <!-- 编辑区域 -->
+  <main class="editor-area">
+    <div id="empty-state" class="empty-state">
+      <p>👈 选择一篇笔记或点击“新建笔记”开始</p>
+    </div>
+
+    <div id="editor" class="editor hidden">
+      <div class="editor-toolbar">
+        <input type="text" id="note-title" class="note-title-input" placeholder="无标题笔记" />
+
+        <div class="toolbar-actions">
+          <select id="note-category-select">
+            <option value="">未分类</option>
+          </select>
+
+          <button id="favorite-btn" class="btn-icon" title="收藏">☆</button>
+          <button id="delete-note-btn" class="btn-icon" title="删除笔记">🗑</button>
+        </div>
+      </div>
+
+      <!-- 富文本工具栏 -->
+      <div class="rte-toolbar">
+        <button type="button" data-cmd="bold" title="粗体"><b>B</b></button>
+        <button type="button" data-cmd="italic" title="斜体"><i>I</i></button>
+        <button type="button" data-cmd="underline" title="下划线"><u>U</u></button>
+        <button type="button" data-cmd="strikeThrough" title="删除线"><s>S</s></button>
+        <span class="rte-divider"></span>
+        <button type="button" data-cmd="insertUnorderedList" title="无序列表">• 列表</button>
+        <button type="button" data-cmd="insertOrderedList" title="有序列表">1. 列表</button>
+        <span class="rte-divider"></span>
+        <button type="button" data-cmd="formatBlock" data-value="H2" title="标题">H2</button>
+        <button type="button" data-cmd="formatBlock" data-value="H3" title="子标题">H3</button>
+        <button type="button" data-cmd="formatBlock" data-value="P" title="正文">P</button>
+        <span class="rte-divider"></span>
+        <button type="button" data-cmd="removeFormat" title="清除格式">清除</button>
+      </div>
+
+      <!-- 富文本内容编辑区 -->
+      <div id="note-content" class="note-content" contenteditable="true" placeholder="开始输入..."></div>
+
+      <div class="editor-footer">
+        <span id="save-status" class="save-status">已保存</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============================================================ -->
+<!-- 分类新建弹窗 -->
+<!-- ============================================================ -->
+<div id="category-modal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3>新建分类</h3>
+    <input type="text" id="category-name-input" placeholder="分类名称" maxlength="30" />
+    <div class="modal-actions">
+      <button id="category-cancel-btn" class="btn-secondary">取消</button>
+      <button id="category-confirm-btn" class="btn-primary">创建</button>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
